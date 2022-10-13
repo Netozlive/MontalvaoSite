@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block titulo %}
+Buscar Imóveis
+{% endblock %}
+
+{% block head %}
+      
+<script>
+    $(document).ready(function() {
+        $("button").click(function() {
+            var x = $("form").serializeArray();
+            $.each(x, function(i, field) {
+                $("#output").append(field.name + ":"
+                        + field.value + " ");
+            });
+        });
+    });
+</script>
+  
+  {% endblock %}
+
+{% block content %}
+
+
+<!-- SECTION-CONTENT -->
+<section class="py-12">
+    <div class="container max-w-screen-xl mx-auto  pr-20">
+
+        <div class="flex flex-col md:flex-row -mx-4">
+            <aside class="md:w-1/3 lg:w-1/4 px-4">
+            <!-- filter wrap -->
+
+                <a id="filtre" class="md:hidden mb-5  w-full text-center px-4 py-2 inline-block text-lg text-gray-700 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 hover:text-blue-600" href="#"> 
+                   a
+                </a>
+
+                <div class=" hidden md:block px-6 py-4 border border-gray-200 bg-white rounded shadow-sm">
+                    
+                    <h3 id="filtrar" class="font-semibold mb-2">Filtrar por:</h3>
+                    <form action="." method="post">
+                        {% csrf_token %}
+                     
+                        {{ separar }}
+
+
+
+
+                    <input type="submit" value="Filtrar">
+                    </form>                    
+                    
+                </div>
+                <!-- filter wrap -->
+            </aside> <!-- col.// -->
+            <main  class="md:w-2/3 lg:w-3/4 px-3">
+                
+                
+                <!-- COMPONENT: PRODUCT ITEM -->
+                
+                <!-- COMPONENT: PRODUCT ITEM //END -->
+
+                <!-- COMPONENT: PRODUCT ITEM -->
+
+                <!-- COMPONENT: PRODUCT ITEM //END -->
+
+                <!-- COMPONENT: PRODUCT ITEM -->
+                <article class="overflow-visible border border-gray-200 overflow-hidden bg-white shadow-sm rounded mb-5">
+
+                {% for imovei in imoveis_filtrados %}
+                <div class="hover:scale-125 bg-white">
+                    <div class="overflow-visible flex flex-col box-border md:flex-row">
+                        <div class="overflow-visible md:w-3/6 md:shrink-0 ">
+                            <img class="overflow-visible h-48 w-full object-contain md:h-full md:w-full"  src="{{ imovei.thumb.url }}" alt="Product name text">
+                        </div> <!-- col.// -->
+                        <div class="md:w-2/6">
+                            
+                                <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}" class="hover:text-blue-600">
+                                    {{ imovei.titulo }}
+                                </a>
+                                <div class="flex flex-wrap items-center space-x-2 mb-2">
+                                    <img src="{% static 'images/misc/stars-active.svg' %}" alt=""> 	
+                                    <b class="text-gray-300">•</b>
+                                    <span class="ml-1 text-yellow-500">9.3</span> 
+                                </div>
+                                <p class="text-gray-500 mb-2"> 
+                                    {{ imovei.descricao|linebreaks }}
+                                </p>
+                                <p class="space-y-2">
+                                     
+                                    {% for i in filtro %}
+                                    {% if i != " " %}
+                                        <span class="inline-block px-3 text-sm py-1 border border-gray-300 text-gray-400 rounded-full"> {{ i }} </span>
+                                    {% endif %}
+                                    {% endfor %}
+                                </p>
+                            
+                        
+                                <p>
+                                    {% if object.consulta == "nao" %}
+                                        <span class="text-xl font-semibold text-black">{{ imovei.valor }}</span>
+                                    {% endif %}
+                                    {% if object.consulta != "nao" %}
+                                    <a href="https://wa.me/{{ corretores }}?text=Vim%20pelo%20{{ imovei.idd }}">Consultar Valor</a>
+                                    {% endif %}
+                                    <del class="line-through text-sm text-gray-400"> $230.00</del>
+                                </p>
+                                <p class="text-green-500">{{ imovei.tipo_autorizacao }}</p>
+                                <div class="my-3">
+                                   
+                                    <a class="px-3 py-2 inline-block text-red-600 border border-gray-300 rounded-md hover:bg-red-100" href="#">
+                                            <i class="fa fa-heart"></i>
+                                    </a>
+                                </div>
+                                </div> <!-- col.// -->
+                    </div> <!-- flex.// -->
+                    <hr>
+                </div>
+                {% endfor %}
+                </article>
+                <!-- COMPONENT: PRODUCT ITEM //END -->
+
+                
+                    
+            </main>  <!-- col.// -->
+        </div> <!-- grid.// -->
+
+    </div> <!-- container .// -->
+</section>
+<!--  SECTION-CONTENT  //END -->
+
+
+
+<footer class="py-6 bg-gray-200">
+    <p class="text-center"><a href="https://tailwind-ecommerce.com">Tailwind ecommerce</a></p>
+</footer>
+
+
+{% endblock %}

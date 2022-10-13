@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+HomeImóveis
+{% endblock %}
+
+{% block head %}
+<style>
+    $itemGrow: 1.2;
+$duration: 250ms;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: #000;
+}
+
+h1 {
+  font-family: Arial;
+  color: red;
+  text-align: center;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3,100%);
+  overflow:hidden;
+  scroll-behavior: smooth;
+
+  section {
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    margin: 20px 0;
+
+    .item {
+      padding: 0 2px;
+      transition: $duration all;
+
+      &:hover {
+        margin: 0 40px;
+        transform: scale(1.2);
+      }
+
+    }
+
+    a {
+      position: absolute;
+      color: #fff;
+      text-decoration: none;
+      font-size: 6em;
+      background:rgb(0,0,0);
+      width: 80px;
+      padding: 20px;
+      text-align: center;
+      z-index: 1;
+
+      &:nth-of-type(1) {
+        top:0; bottom:0; left:0;
+        background: linear-gradient(-90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+      }
+      &:nth-of-type(2) {
+        top:0; bottom:0; right: 0;
+        background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+      }
+
+    }
+
+  }
+}
+
+// Remove the arrow for Mobile
+@media only screen and (max-width: 600px) {
+  a.arrow__btn {
+    display:none;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <main class='bg-primary_black min-h-screen w-full'>
+        <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex items-end bg-cover" style="background-image: url('{{ imovel_destaque.thumb.url }}');">
+            <div>
+                <h2 class="text-6xl font-semibold text-white my-4">
+                    {{ imovel_destaque.titulo }}
+                </h2>
+                <p class=" w-11/12 md:w-5/12 font-medium text-white my-4">
+                    {{ imovel_destaque.descricao }}
+                </p>
+                <div class="flex my-4">
+                    <a href="{% url 'imoveis:detalhesimovel' imovel_destaque.pk %}">
+                        <button class="flex items-center bg-white py-2 px-5 rounded-md" style='color:black;'>
+                            <ion-icon name="play" class="text-2xl"></ion-icon>
+                            <span class="ml-3 font-medium " >
+                                Conferir
+                            </span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+        <section class='bg-primary_black flex justify-center py-10'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-black-200 text-2xl font-medium">
+                    Novo
+                </h2>
+                <div class="wrapper">
+                  <section id="section1" class="flex flex-nowrap items-center justify-center space-x-8">
+                    <a href="#section2" class="arrow__btn text-6xl page">‹</a>
+                      {% for imovei in lista_imoveis_recentes %}
+                      {% if forloop.counter < 5 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                            <img src="{{ imovei.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                        <a href="#section2" class="arrow__btn text-6xl">›</a>
+                  </section>
+                    {% if lista_imoveis_recentes|length > 4 %}
+                      <section id="section2" class="flex flex-nowrap items-center justify-center">
+                        <a href="#section1" class="arrow__btn text-6xl">‹</a>
+                          {% for imovel in lista_imoveis_recentes %}
+                          {% if forloop.counter > 4 %}
+                          <div class="item h-64 w-1/4 m-4">
+                              <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                                <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                              </a>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        <a href="#section1" class="arrow__btn text-6xl">›</a>
+                      </section>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </section>
+
+        <section class='bg-primary_black flex justify-center py-10'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-black-200 text-2xl font-medium">
+                    Em Alta
+                </h2>
+                <div class="wrapper">
+                  <section id="section1emalta" class="flex flex-nowrap items-center justify-center space-x-8">
+                    <a href="#section2emalta" class="arrow__btn text-6xl page">‹</a>
+                      {% for imovel in lista_imoveis_emalta %}
+                      {% if forloop.counter < 5 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                            <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                        <a href="#section2emalta" class="arrow__btn text-6xl">›</a>
+                  </section>
+                    {% if lista_imoveis_emalta|length > 4 %}
+                      <section id="section2emalta" class="flex flex-nowrap items-center justify-center">
+                        <a href="#section1emalta" class="arrow__btn text-6xl">‹</a>
+                          {% for imovel in lista_imoveis_emalta %}
+                          {% if forloop.counter > 4 %}
+                          <div class="item h-64 w-1/4 m-4">
+                              <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                                <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                              </a>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        <a href="#section1emalta" class="arrow__btn text-6xl">›</a>
+                      </section>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </section>
+
+        
+        <section class='bg-primary_black flex justify-center py-10'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-black-200 text-2xl font-medium">
+                    Última visita:
+                </h2>
+                <div class="wrapper">
+                  <section id="section1vistos" class="flex flex-nowrap items-center justify-center space-x-8">
+                    <a href="#section2vistos" class="arrow__btn text-6xl page">‹</a>
+                      {% for imovel in request.user.imoveis_vistos.all %}
+                      {% if forloop.counter < 5 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                            <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                        <a href="#section2vistos" class="arrow__btn text-6xl">›</a>
+                  </section>
+                    {% if request.user.imoveis_vistos.all|length > 4 %}
+                      <section id="section2vistos" class="flex flex-nowrap items-center justify-center">
+                        <a href="#section1vistos" class="arrow__btn text-6xl">‹</a>
+                          {% for imovel in request.user.imoveis_vistos.all %}
+                          {% if forloop.counter > 4 %}
+                          <div class="item h-64 w-1/4 m-4">
+                              <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                                <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                              </a>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        <a href="#section1vistos" class="arrow__btn text-6xl">›</a>
+                      </section>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </section>
+
+        
+
+        <section class='bg-primary_black flex justify-center py-10'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-black-200 text-2xl font-medium">
+                    Favoritos:
+                </h2>
+                <div class="wrapper">
+                  <section id="section1favoritos" class="flex flex-nowrap items-center justify-center space-x-8">
+                    <a href="#section2favoritos" class="arrow__btn text-6xl page">‹</a>
+                      {% for imovel in request.user.favoritos.all %}
+                      {% if forloop.counter < 5 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                            <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                        <a href="#section2favoritos" class="arrow__btn text-6xl">›</a>
+                  </section>
+                    {% if request.user.favoritos.all|length > 4 %}
+                      <section id="section2favoritos" class="flex flex-nowrap items-center justify-center">
+                        <a href="#section1favoritos" class="arrow__btn text-6xl">‹</a>
+                          {% for imovel in request.user.favoritos.all %}
+                          {% if forloop.counter > 4 %}
+                          <div class="item h-64 w-1/4 m-4">
+                              <a href="{% url 'imoveis:detalhesimovel' imovel.pk %}">
+                                <img src="{{ imovel.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                              </a>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        <a href="#section1favoritos" class="arrow__btn text-6xl">›</a>
+                      </section>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </section>
+
+
+
+
+
+
+        <section class='bg-primary_black flex justify-center py-10'>
+          <div class="p-8 w-10/12 relative" >
+              <h2 class="text-black-200 text-2xl font-medium">
+                  Apartamentos
+              </h2>
+              <div class="wrapper">
+                <section id="section1apartamentos" class="flex flex-nowrap items-center justify-center space-x-8">
+                  <a href="#section2apartamentos" class="arrow__btn text-6xl page">‹</a>
+                  {% for imovei in imoveis_apartamento %}
+                    {% if forloop.counter < 5 %}
+                    <div class="item h-64 w-1/4 m-4">
+                        <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                          <img src="{{ imovei.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                      <a href="#section2vistos" class="arrow__btn text-6xl">›</a>
+                </section>
+                  {% if request.user.imoveis_apartamento.all|length > 4 %}
+                    <section id="section2apartamentos" class="flex flex-nowrap items-center justify-center">
+                      <a href="#section1apartamentos" class="arrow__btn text-6xl">‹</a>
+                      {% for imovei in imoveis_apartamento %}
+                        {% if forloop.counter > 4 %}
+                        <div class="item h-64 w-1/4 m-4">
+                            <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                              <img src="{{ imovei.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                      <a href="#section1apartamentos" class="arrow__btn text-6xl">›</a>
+                    </section>
+                  {% endif %}
+              </div>
+
+
+          </div>
+      </section>
+
+
+        
+
+
+
+
+      <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative" >
+            <h2 class="text-black-200 text-2xl font-medium">
+                Casas
+            </h2>
+            <div class="wrapper">
+              <section id="section1casas" class="flex flex-nowrap items-center justify-center space-x-8">
+                <a href="#section2casas" class="arrow__btn text-6xl page">‹</a>
+                {% for imovei in imoveis_casa %}
+                  {% if forloop.counter < 5 %}
+                  <div class="item h-64 w-1/4 m-4">
+                      <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                        <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                      </a>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                    <a href="#section2casas" class="arrow__btn text-6xl">›</a>
+              </section>
+                {% if request.user.imoveis_casa.all|length > 4 %}
+                  <section id="section2casas" class="flex flex-nowrap items-center justify-center">
+                    <a href="#section1casas" class="arrow__btn text-6xl">‹</a>
+                    {% for imovei in imoveis_casa %}
+                      {% if forloop.counter > 4 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                            <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                    <a href="#section1casas" class="arrow__btn text-6xl">›</a>
+                  </section>
+                {% endif %}
+            </div>
+
+
+        </div>
+      </section>
+
+
+
+
+
+
+
+
+      <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative" >
+            <h2 class="text-black-200 text-2xl font-medium">
+              Terreno
+            </h2>
+            <div class="wrapper">
+              <section id="section1terrenos" class="flex flex-nowrap items-center justify-center space-x-8">
+                <a href="#section2terrenos" class="arrow__btn text-6xl page">‹</a>
+                {% for imovei in imoveis_terreno %}
+                  {% if forloop.counter < 5 %}
+                  <div class="item h-64 w-1/4 m-4">
+                      <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                        <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                      </a>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                    <a href="#section2terrenos" class="arrow__btn text-6xl">›</a>
+              </section>
+                {% if request.user.imoveis_terreno.all|length > 4 %}
+                  <section id="section2terrenos" class="flex flex-nowrap items-center justify-center">
+                    <a href="#section1terrenos" class="arrow__btn text-6xl">‹</a>
+                    {% for imovei in imoveis_terreno %}
+                      {% if forloop.counter > 4 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                            <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                    <a href="#section1terrenos" class="arrow__btn text-6xl">›</a>
+                  </section>
+                {% endif %}
+            </div>
+
+
+        </div>
+      </section>
+
+      <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative" >
+            <h2 class="text-black-200 text-2xl font-medium">
+                Imóveis Comerciais
+            </h2>
+            <div class="wrapper">
+              <section id="section1comerciais" class="flex flex-nowrap items-center justify-center space-x-8">
+                <a href="#section2comerciais" class="arrow__btn text-6xl page">‹</a>
+                {% for imovei in imoveis_comercial %}
+                  {% if forloop.counter < 5 %}
+                  <div class="item h-64 w-1/4 m-4">
+                      <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                        <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                      </a>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                    <a href="#section2comerciais" class="arrow__btn text-6xl">›</a>
+              </section>
+                {% if request.user.imoveis_comercial.all|length > 4 %}
+                  <section id="section2comerciais" class="flex flex-nowrap items-center justify-center">
+                    <a href="#section1comerciais" class="arrow__btn text-6xl">‹</a>
+                    {% for imovei in imoveis_comercial %}
+                      {% if forloop.counter > 4 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                            <img src="{{ imovei.thumb.url }}" class="object-cover w-full h-full " alt="">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                    <a href="#section1comerciais" class="arrow__btn text-6xl">›</a>
+                  </section>
+                {% endif %}
+            </div>
+
+
+        </div>
+      </section>
+
+
+
+
+
+
+      <section class='bg-primary_black flex justify-center py-10'>
+        <div class="p-8 w-10/12 relative" >
+            <h2 class="text-black-200 text-2xl font-medium">
+              Imoveis Rurais
+            </h2>
+            <div class="wrapper">
+              <section id="section1rurais" class="flex flex-nowrap items-center justify-center space-x-8">
+                <a href="#section2rurais" class="arrow__btn text-6xl page">‹</a>
+                {% for imovei in imoveis_rural %}
+                  {% if forloop.counter < 5 %}
+                  <div class="item h-64 w-1/4 m-4">
+                      <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                        <img src="{{ imovei.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                      </a>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                    <a href="#section2rurais" class="arrow__btn text-6xl">›</a>
+              </section>
+                {% if request.user.imoveis_rural.all|length > 4 %}
+                  <section id="section2rurais" class="flex flex-nowrap items-center justify-center">
+                    <a href="#section1rurais" class="arrow__btn text-6xl">‹</a>
+                    {% for imovei in imoveis_rural %}
+                      {% if forloop.counter > 4 %}
+                      <div class="item h-64 w-1/4 m-4">
+                          <a href="{% url 'imoveis:detalhesimovel' imovei.pk %}">
+                            <img src="{{ imovei.thumb.url }}" class="rounded-md w-full h-full object-cover">
+                          </a>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                    <a href="#section1rurais" class="arrow__btn text-6xl">›</a>
+                  </section>
+                {% endif %}
+            </div>
+
+
+        </div>
+      </section>
+
+
+
+    </main>
+
+{% endblock %}

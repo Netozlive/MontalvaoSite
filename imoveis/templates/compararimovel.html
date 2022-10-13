@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        {% load static %}
+{% load crispy_forms_tags %}
+
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css">
+        <link rel="stylesheet" href="{% static 'js/' %}index.js">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body>
+
+					<article class="border border-gray-200 shadow-sm rounded bg-white">
+						<nav class="border-b px-4">
+							<button>
+								<a href="{{ object.link_maps }}" class="px-3 py-4 mx-1 inline-block focus:border-b focus:border-blue-600 focus:text-blue-600 hover:border-blue-600 hover:text-blue-500" target="iframe_e">Localização</a>
+							</button>
+
+							{% if  object.qtde_dorms > 0  %}
+							<button>
+								<a href="{{ object.dorm_link }}"  class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block  hover:border-blue-600 hover:text-blue-500" target="iframe_e">Quartos</a>
+							</button>
+							{%endif%}
+
+							{% if  object.qtde_banheiros > 0  %}
+							<button>
+								<a href="{{ object.banheiro_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Banheiros</a>
+							</button>
+							{%endif%}
+
+							{% if  object.qtde_salas > 0  %}
+							<button>
+								<a href="{{ object.sala_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Salas</a>
+							</button>
+							{% endif %}
+
+							{% if  object.qtde_garagens > 0  %}
+							<button>
+								<a href="{{ object.garagem_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Garagens</a>
+							</button>
+							{% endif %}
+
+							{% if  object.sendo_suites > 0  %}
+							<button>
+								<a href="{{ object.suite_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Suites</a>
+							</button>
+							{% endif %}
+							{% if  object.mais_link != '#'  %}
+							<button>
+								<a href="{{ object.mais_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Mais Tours</a>
+							</button>
+							{% endif %}
+
+							{% if object.quintal_ou_jardim_ou_area_externa == "sim" and object.mais_link != '#' %}
+							<hr>
+
+							{% elif  object.quintal_ou_jardim_ou_area_externa == "sim" and object.area_gourmet == "sim" %}
+							<hr>
+
+							{% elif  object.area_gourmet == "sim" and object.mais_link != '#' %}
+
+							{% endif %}
+
+
+							{% if  object.quintal_ou_jardim_ou_area_externa == "sim"  %}
+							<button>
+								<a href="{{ object.quintal_ou_jardim_ou_area_externa_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Quintal/Jardim/Área Externa</a>
+							</button>
+							{% endif %}
+
+							{% if  object.area_gourmet == "sim"  %}
+							<button>
+								<a href="{{ object.area_gourmet_link }}" class="focus:border-b focus:border-blue-600 focus:text-blue-600 px-3 py-4 mx-1 inline-block hover:border-blue-600 hover:text-blue-500" target="iframe_e">Área Gourmet</a>
+							</button>
+							{% endif %}
+
+						</nav>
+						<div class="p-5 aspect-video w-full px-5 ">
+							<p>
+								<iframe src="{{ object.link_maps }}"  name="iframe_e" class=" aspect-video w-full object-cover m-4" style="border:0;"  loading="lazy" ></iframe>
+							</p>
+						</div>
+
+
+
+
+
+					</article>
+
+    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
+ <script>
+        new Glider(document.querySelector('.glider'), {
+  slidesToShow: 5,
+  slidesToScroll: 1,
+  draggable: true,
+  dots: '.dots',
+  arrows: {
+    prev: '.glider-prev',
+    next: '.glider-next'
+  }
+});
+</script>
+</html>

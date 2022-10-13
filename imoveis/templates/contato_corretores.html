@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block titulo %}
+{{ object.titulo }}
+{% endblock %}
+
+
+{% block content %}
+
+
+{% for i in corretores %}
+<p> {{ i.numero_corretor }} </p> 
+{% endfor %}
+
+{% endblock %}
